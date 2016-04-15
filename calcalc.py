@@ -1,9 +1,12 @@
-a = 0.00034
-b = 53453.53455
+# TODO: write functions documentation
 
 
 def addition(x, y):
     return x + y
+
+
+def subtraction(x, y):
+    return x - y
 
 
 def multiplier_finder(x):
@@ -14,8 +17,7 @@ def multiplier_finder(x):
         multiplier = int('1' + sub_multiplication(digits_after_dot, '0'))
         return multiplier, digits_after_dot
     else:
-        multiplier = 1
-        return multiplier, 0
+        return 1, 0
 
 
 def sub_multiplication(x, y):
@@ -41,7 +43,7 @@ def sub_multiplication(x, y):
         return y
 
 
-def final_result(integer_result, decimal_places, x, y):
+def float_result(integer_result, decimal_places, x, y):
     string_version = str(integer_result)
     radix_point_index = - decimal_places
     if radix_point_index == 0:
@@ -76,13 +78,138 @@ def multiplication(x, y):
 
     xy_integer_multiplication = sub_multiplication(integer_x, integer_y)
 
-    the_final_result = final_result(xy_integer_multiplication, length_final, x, y)
+    multiplication_result = float_result(xy_integer_multiplication, length_final, x, y)
 
-    print('\nx =', x)
+    return multiplication_result
+
+
+a = 23.77
+b = 3.14
+
+print('ref result     =', a * b)
+print('multiplication =', multiplication(a, b))
+
+
+def sub_division(numerator, denominator):
+    if denominator == 0:
+        return 'illegal division by zero'
+    if denominator < 0:
+        quotient, remainder = sub_division(numerator, -denominator)
+        return -quotient, remainder
+    if numerator < 0:
+        quotient, remainder = sub_division(-numerator, denominator)
+        if remainder == 0:
+            return -quotient, 0
+        else:
+            return -quotient-1, denominator-remainder
+    quotient = 0
+    remainder = numerator
+    while remainder >= denominator:
+        quotient += 1
+        remainder -= denominator
+    return quotient, remainder
+
+
+def long_division(numerator, denominator, decimal_places=16):
+    num = numerator
+    den = denominator
+    numerator = abs(numerator)
+    denominator = abs(denominator)
+
+    num_string = str(numerator) + sub_multiplication(decimal_places, '0')
+    decimal_dot = len(str(numerator))
+    quotient = ''
+    index = 0
+    c = 1
+    quotient_digit = sub_division(int(num_string[index]), denominator)[0]
+    difference = int(num_string[index:c])
+
+    while quotient_digit == 0:
+        quotient += str(quotient_digit)
+        c += 1
+        difference = int(num_string[index:c])
+        quotient_digit = sub_division(difference, denominator)[0]
+
+    quotient += str(quotient_digit)
+
+    while True:
+        if len(quotient) == len(num_string):
+            break
+        index += 1
+        subtrahend = multiplication(quotient_digit, denominator)
+        diff_part = difference - subtrahend
+        difference = int(str(diff_part) + num_string[c])
+        c += 1
+        if difference == 0:
+            break
+        quotient_digit = sub_division(difference, denominator)[0]
+        quotient += str(quotient_digit)
+
+    quotient = list(quotient)
+    quotient.insert(decimal_dot, '.')
+    quotient = ''.join(quotient)
+    quotient = quotient.lstrip('0')
+    quotient = float(quotient)
+
+    if abs(num) == num and abs(den) == den:
+        return quotient
+    elif abs(num) == num or abs(den) == den:
+        return -quotient
+    else:
+        return quotient
+
+
+def final_division(pre_division, length_final, x, y):
+    print('pre_division =', pre_division)
+    print('length_final =', length_final)
+    print('x =', x)
     print('y =', y)
-    print('reference result =', x * y)
-    print('\n__FINAL RESULT__ =', the_final_result)
-    print(type(the_final_result))
+    if length_final == 0:
+        if abs(x) == x and abs(y) == y:
+            return pre_division
+        elif abs(x) == x or abs(y) == y:
+            return -pre_division
+        else:
+            return pre_division
+
+    else:
+        # TODO: get rid of ** - exponentiation
+        #
+        result = multiplication(pre_division, 10**length_final)
+
+        if abs(x) == x and abs(y) == y:
+            return result
+        elif abs(x) == x or abs(y) == y:
+            return -result
+        else:
+            return result
 
 
-multiplication(a, b)
+def division(x, y, decimal_places):
+    multiplier_x = multiplier_finder(x)[0]
+    multiplier_y = multiplier_finder(y)[0]
+
+    integer_x = sub_multiplication(x, multiplier_x)
+    integer_y = sub_multiplication(y, multiplier_y)
+
+    length_x = multiplier_finder(x)[1]
+    length_y = multiplier_finder(y)[1]
+
+    length_final = length_y - length_x
+
+    pre_division = long_division(integer_x, integer_y, decimal_places)
+
+    division_result = final_division(pre_division, length_final, x, y)
+
+    return division_result
+
+
+a = -2.1
+b = -3
+precision = 5  # >7 may result in very long computing times
+
+
+print('ref result    =', round(a / b, precision-1))
+# print('long_division =', long_division(a, b))
+
+print('division      =', division(a, b, precision))
