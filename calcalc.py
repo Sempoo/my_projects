@@ -27,7 +27,7 @@ def sub_multiplication(x, y):
         return 0
     if y == 0:
         return 0
-    if int(x) != x:
+    if int(x) != x or str(x)[-1] == '0':
         integer_part = int(x)
         float_remainder = round(x - integer_part, multiplier_finder(x)[1])
         for i in range(integer_part-1):
@@ -83,11 +83,11 @@ def multiplication(x, y):
     return multiplication_result
 
 
-a = 23.77
-b = 3.14
-
-print('ref result     =', a * b)
-print('multiplication =', multiplication(a, b))
+# a = 23.77
+# b = 3.14
+#
+# print('ref result     =', a * b)
+# print('multiplication =', multiplication(a, b))
 
 
 def sub_division(numerator, denominator):
@@ -110,7 +110,7 @@ def sub_division(numerator, denominator):
     return quotient, remainder
 
 
-def long_division(numerator, denominator, decimal_places=16):
+def long_division(numerator, denominator, decimal_places):
     num = numerator
     den = denominator
     numerator = abs(numerator)
@@ -160,10 +160,7 @@ def long_division(numerator, denominator, decimal_places=16):
 
 
 def final_division(pre_division, length_final, x, y):
-    print('pre_division =', pre_division)
-    print('length_final =', length_final)
-    print('x =', x)
-    print('y =', y)
+
     if length_final == 0:
         if abs(x) == x and abs(y) == y:
             return pre_division
@@ -173,9 +170,7 @@ def final_division(pre_division, length_final, x, y):
             return pre_division
 
     else:
-        # TODO: get rid of ** - exponentiation
-        #
-        result = multiplication(pre_division, 10**length_final)
+        result = multiplication(pre_division, int_exp(10, length_final))
 
         if abs(x) == x and abs(y) == y:
             return result
@@ -185,7 +180,7 @@ def final_division(pre_division, length_final, x, y):
             return result
 
 
-def division(x, y, decimal_places):
+def division(x, y, decimal_places=16):
     multiplier_x = multiplier_finder(x)[0]
     multiplier_y = multiplier_finder(y)[0]
 
@@ -204,12 +199,28 @@ def division(x, y, decimal_places):
     return division_result
 
 
-a = -2.1
-b = -3
-precision = 5  # >7 may result in very long computing times
+# a = 3
+# b = 111
+# precision = 7  # >7 may result in very long computing times
+#
+# print('ref result    =', round(a / b, precision-1))
+# print('division      =', division(a, b, precision))
 
 
-print('ref result    =', round(a / b, precision-1))
-# print('long_division =', long_division(a, b))
+def int_exp(base, exponent):
+    if exponent > 0:
+        power = base
+        for i in range(exponent-1):
+            power = multiplication(power, base)
+        return power
+    elif exponent < 0:
+        power = division(1, int_exp(base, -exponent))
+        return power
+    else:
+        return 1
 
-print('division      =', division(a, b, precision))
+x = 2.1
+n = 6
+
+print('ref result      =', x**n)
+print('int_exp         =', int_exp(x, n))
