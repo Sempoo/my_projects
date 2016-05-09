@@ -41,12 +41,14 @@ s = ttk.Style()
 s.configure('c.TButton', foreground='red')
 s.configure('blue.TButton', foreground='blue')
 
+
 def clear(backspace_sym):
-    print('BackSpace pressed')
+    display.event_generate('<<Clear>>')
+    # print('BackSpace pressed')
+    # return 'break'
 button_clear = ttk.Button(tab_1, text='C', width=6, style='c.TButton')
 button_clear.grid(column=0, row=1)
 button_clear.bind('<Button-1>', clear)
-
 
 
 def result(return_sym):
@@ -113,7 +115,7 @@ button_0.bind('<Button-1>', zero)
 
 
 def one(one_sym):
-    print('czemu to sie wyswietla?!')
+    print('1 pressed')
 button_1 = ttk.Button(tab_1, text='1', width=6)
 button_1.grid(column=0, row=4)
 button_1.bind('<Button-1>', one)
@@ -231,23 +233,23 @@ for child in tab_1.winfo_children():
 # print(zero)
 tab_1.bind_all('<BackSpace>', clear)
 tab_1.bind_all('<Return>', result)
-tab_1.bind_all('<plus>', add)
-tab_1.bind_all('<minus>', subtract)
-tab_1.bind_all('<asterisk>', multiply)
-tab_1.bind_all('<slash>', divide)
-tab_1.bind_all('<e>', exp)
-tab_1.bind_all('<r>', root)
-tab_1.bind_all('<comma>', comma)
-tab_1.bind_all('<0>', zero)
-tab_1.bind_all('<1>', one)
-tab_1.bind_all('<2>', two)
-tab_1.bind_all('<3>', three)
-tab_1.bind_all('<4>', four)
-tab_1.bind_all('<5>', five)
-tab_1.bind_all('<6>', six)
-tab_1.bind_all('<7>', seven)
-tab_1.bind_all('<8>', eight)
-tab_1.bind_all('<9>', nine)
+tab_1.bind_all('+', add)
+tab_1.bind_all('-', subtract)
+tab_1.bind_all('*', multiply)
+tab_1.bind_all('/', divide)
+tab_1.bind_all('e', exp)
+tab_1.bind_all('r', root)
+tab_1.bind_all(',', comma)
+tab_1.bind_all('0', zero)
+tab_1.bind_all('1', one)
+tab_1.bind_all('2', two)
+tab_1.bind_all('3', three)
+tab_1.bind_all('4', four)
+tab_1.bind_all('5', five)
+tab_1.bind_all('6', six)
+tab_1.bind_all('7', seven)
+tab_1.bind_all('8', eight)
+tab_1.bind_all('9', nine)
 
 
 tab_2 = ttk.Frame(tabs)
