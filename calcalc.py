@@ -78,7 +78,8 @@ def multiplication(x, y):
 
     xy_integer_multiplication = sub_multiplication(integer_x, integer_y)
 
-    multiplication_result = float_result(xy_integer_multiplication, length_final, x, y)
+    multiplication_result = float_result(xy_integer_multiplication,
+                                         length_final, x, y)
 
     return multiplication_result
 
@@ -208,6 +209,8 @@ def division(x, y, decimal_places=16):
 
 
 def int_exp(base, exponent):
+    base = int(base)
+    exponent = int(exponent)
     if exponent > 0:
         power = base
         for i in range(exponent-1):
@@ -219,8 +222,39 @@ def int_exp(base, exponent):
     else:
         return 1
 
-x = 2.1
-n = 6
+# x = 2
+# n = 24
+#
+# print('ref result      =', x**n)
+# print('int_exp         =', int_exp(x, n))
 
-print('ref result      =', x**n)
-print('int_exp         =', int_exp(x, n))
+
+def root(radicand, degree, iterations=6):
+    """
+    This function is able to calculate nth root, even from floats.
+    Based on Newton Method.
+    """
+    x = radicand / degree
+    root = 1
+    for i in range(iterations):
+        root = (1 / degree) * ((degree - 1) * x + radicand / x**(degree - 1))
+        # root = (1 / degree) * ((degree - 1) * x + radicand / x**(degree - 1))
+        # a = division(1, degree)
+        # b = multiplication(degree-1, x)
+        # c = int_exp(round(x, 1), degree-1)
+        # d = division(radicand, c)
+        # root = multiplication(a, (b + d))
+
+        x = root
+    return root
+
+
+# a = 2
+# n = 2
+# iterations = 6
+#
+# print('ref result =', pow(a, 1/n))
+# print('root       =', root(a, n, iterations))
+
+# print('power ref =', a**n)
+# print('power     =', root(a, 1/n, iterations))
