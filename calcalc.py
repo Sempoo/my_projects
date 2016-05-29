@@ -1,15 +1,31 @@
-# TODO: write functions documentation
+# Welcome to Calcalc - a special calculator, which in its engine code does not
+# use <slash> for division or <asterisk> for multiplication - it instead uses
+# special algorithms, which can work without those operators to perform
+# calculating functions.
+# Warning - it can be really slow on some numbers.
 
 
 def addition(x, y):
+    """
+    Simple addition
+    """
     return x + y
 
 
 def subtraction(x, y):
+    """
+    Simple subtraction
+    """
     return x - y
 
 
 def multiplier_finder(x):
+    """
+    This function finds multiplier for float numbers used in multiplication,
+    to make them integers for further processing.
+    It returns multiplier and digits_after_dot marker.
+    For example 23.77 returns multiplier = 100 and digits_after_dot = 2.
+    """
     string_version = str(abs(x))
     if string_version.find('.') > 0:
         digits = len(string_version) - 1
@@ -21,6 +37,11 @@ def multiplier_finder(x):
 
 
 def sub_multiplication(x, y):
+    """
+    Returns integer made of float by multiplying it by 10 taken x times, where x
+    is taken from decimal places after dot.
+    For example 23.77 is returned as 2377.
+    """
     x = abs(x)
     z = y
     if x == 0:
@@ -44,6 +65,10 @@ def sub_multiplication(x, y):
 
 
 def float_result(integer_result, decimal_places, x, y):
+    """
+    Takes integer subresult and puts decimal dot in appropriate place.
+    Returns float result of multiplication.
+    """
     string_version = str(integer_result)
     radix_point_index = - decimal_places
     if radix_point_index == 0:
@@ -65,6 +90,10 @@ def float_result(integer_result, decimal_places, x, y):
 
 
 def multiplication(x, y):
+    """
+    Final function of multiplication - it uses other subfunctions to calculate
+    the result.
+    """
     multiplier_x = multiplier_finder(x)[0]
     multiplier_y = multiplier_finder(y)[0]
 
@@ -84,14 +113,11 @@ def multiplication(x, y):
     return multiplication_result
 
 
-# a = 23.77
-# b = 3.14
-#
-# print('ref result     =', a * b)
-# print('multiplication =', multiplication(a, b))
-
-
 def sub_division(numerator, denominator):
+    """
+    Recursive dividing function for processing integers only.
+    It returns division quotient and remainder (unused in Calcalc).
+    """
     if denominator == 0:
         return 'illegal division by zero'
     if denominator < 0:
@@ -112,6 +138,12 @@ def sub_division(numerator, denominator):
 
 
 def long_division(numerator, denominator, decimal_places):
+    """
+    This function performs classical 'long division' algorithm - for simple
+    inner integer division it uses 'sub_division" function.
+    It returns integer result, which is further processed by float_division
+    function to obtain float reasult.
+    """
     num = numerator
     den = denominator
     numerator = abs(numerator)
@@ -160,8 +192,10 @@ def long_division(numerator, denominator, decimal_places):
         return quotient
 
 
-def final_division(pre_division, length_final, x, y):
-
+def float_division(pre_division, length_final, x, y):
+    """
+    Transforms integer pre_division result into float number.
+    """
     if length_final == 0:
         if abs(x) == x and abs(y) == y:
             return pre_division
@@ -182,6 +216,11 @@ def final_division(pre_division, length_final, x, y):
 
 
 def division(x, y, decimal_places=16):
+    """
+    Final function of division - it uses other subfunctions to calculate
+    the result.
+    Decimal places defines how many digits appear after dot in final result.
+    """
     multiplier_x = multiplier_finder(x)[0]
     multiplier_y = multiplier_finder(y)[0]
 
@@ -195,20 +234,15 @@ def division(x, y, decimal_places=16):
 
     pre_division = long_division(integer_x, integer_y, decimal_places)
 
-    division_result = final_division(pre_division, length_final, x, y)
+    division_result = float_division(pre_division, length_final, x, y)
 
     return division_result
 
 
-# a = 3
-# b = 111
-# precision = 7  # >7 may result in very long computing times
-#
-# print('ref result    =', round(a / b, precision-1))
-# print('division      =', division(a, b, precision))
-
-
 def int_exp(base, exponent):
+    """
+    Exponentiation function only for integers.
+    """
     base = int(base)
     exponent = int(exponent)
     if exponent > 0:
@@ -222,12 +256,6 @@ def int_exp(base, exponent):
     else:
         return 1
 
-# x = 2
-# n = 24
-#
-# print('ref result      =', x**n)
-# print('int_exp         =', int_exp(x, n))
-
 
 def root(radicand, degree, iterations=6):
     """
@@ -235,26 +263,8 @@ def root(radicand, degree, iterations=6):
     Based on Newton Method.
     """
     x = radicand / degree
-    root = 1
+    root_result = 1
     for i in range(iterations):
-        root = (1 / degree) * ((degree - 1) * x + radicand / x**(degree - 1))
-        # root = (1 / degree) * ((degree - 1) * x + radicand / x**(degree - 1))
-        # a = division(1, degree)
-        # b = multiplication(degree-1, x)
-        # c = int_exp(round(x, 1), degree-1)
-        # d = division(radicand, c)
-        # root = multiplication(a, (b + d))
-
-        x = root
-    return root
-
-
-# a = 2
-# n = 2
-# iterations = 6
-#
-# print('ref result =', pow(a, 1/n))
-# print('root       =', root(a, n, iterations))
-
-# print('power ref =', a**n)
-# print('power     =', root(a, 1/n, iterations))
+        root_result = (1 / degree) * ((degree - 1) * x + radicand / x**(degree - 1))
+        x = root_result
+    return root_result
