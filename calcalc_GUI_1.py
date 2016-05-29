@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import Menu
 from tkinter import messagebox as msg_box
-# import test_engine as engine
 import calcalc as engine
 
 
@@ -10,7 +9,6 @@ main_window = tk.Tk()
 main_window.title('Calcalc')
 main_window.configure(background='#4D4D4D')
 main_window.resizable(False, False)
-# main_window.geometry('600x600')
 
 
 menu_bar = Menu(main_window)
@@ -83,7 +81,13 @@ def result(return_sym):
     print('Return pressed')
     global number_1, number_2, action
     get_num2()
-    res = action(float(number_1), float(number_2))
+    if action == engine.division:
+        res = action(float(number_1), float(number_2), int(div_prec.get()))
+    elif action == engine.root:
+        res = action(float(number_1), float(number_2), int(root_iter.get()))
+    else:
+        res = action(float(number_1), float(number_2))
+
     if str(res)[-2:] == '.0':
         display_text.set(int(res))
     else:
@@ -110,7 +114,11 @@ tab_1.bind_all('+', add)
 def subtract(minus_sym):
     print('- pressed')
     global memory, number_1, action
-    display_text.set(memory + ' - ')
+    if memory == '':
+        display_text.set('-')
+        memory = '-'
+    else:
+        display_text.set(memory + ' - ')
     number_1 = memory
     action = engine.subtraction
     get_num1()
@@ -174,10 +182,23 @@ tab_1.bind_all('r', root)
 
 def dev(d_sym):
     print('\ndev info:\n---------')
-    print('memory   = ', memory)
-    print('number_1 = ', number_1)
-    print('number_2 = ', number_2)
-    print('action   = ', action, '\n')
+    print('memory   =', memory)
+    print('number_1 =', number_1)
+    print('number_2 =', number_2)
+    print('action   =', action)
+    print('div_prec =', div_prec.get())
+    print('root_iter =', root_iter.get())
+    try:
+        if action == engine.multiplication:
+            print('multipl_ref =', float(number_1) * float(number_2))
+        if action == engine.division:
+            print('div_ref =', float(number_1) / float(number_2))
+        if action == engine.int_exp:
+            print('exp_ref =', float(number_1) ** float(number_2))
+        if action == engine.root:
+            print('root_ref =', float(number_1) ** (1/float(number_2)))
+    except ValueError:
+        print('press \'dev\' after pressing \'=\' to obtain ref_result')
 button_comma = ttk.Button(tab_1, text='dev', width=6, style='red.TButton')
 button_comma.grid(column=2, row=5)
 button_comma.bind('<Button-1>', dev)
@@ -309,25 +330,27 @@ for child in tab_1.winfo_children():
     child.grid_configure(padx=2, pady=2)
 
 
-progressbar = ttk.Progressbar(tab_1, orient=tk.HORIZONTAL, length=270)
-progressbar.grid(column=0, row=6, columnspan=4)
-progressbar.config(mode='indeterminate')
-# progressbar.start()
-# progressbar.stop()
-value = tk.DoubleVar()
-progressbar.config(variable=value)
-x = value.get()
-print('progress =', x)
-
 tab_2 = ttk.Frame(tabs)
 tabs.add(tab_2, text='Settings')
 
 div_prec_frame = ttk.LabelFrame(tab_2, text='Division Precision')
 div_prec_frame.grid(column=0, row=0)
+div_prec_frame.grid_configure(padx=7)
 div_prec = tk.StringVar()
 div_precision = tk.Spinbox(div_prec_frame, from_=0, to=16, width=4,
                            textvariable=div_prec)
+div_precision.pack_configure(padx=5, pady=5)
 div_prec.set(16)
-div_precision.grid(column=0, row=0)
+div_precision.pack()
+
+
+root_iter_frame = ttk.LabelFrame(tab_2, text='Root Iterations')
+root_iter_frame.grid(column=1, row=0)
+root_iter = tk.StringVar()
+root_iterations = tk.Spinbox(root_iter_frame, from_=0, to=16, width=4,
+                             textvariable=root_iter)
+root_iterations.pack_configure(padx=5, pady=5)
+root_iter.set(6)
+root_iterations.pack()
 
 main_window.mainloop()
